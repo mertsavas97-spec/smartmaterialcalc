@@ -3,7 +3,7 @@ import { shouldAllowSearchIndexingMetadata } from "./indexing";
 import { absoluteUrl, SITE } from "./site";
 
 /** Bumped when favicon / PWA icon binaries change to bust browser caches. */
-export const ICON_ASSET_VERSION = "2";
+export const ICON_ASSET_VERSION = "3";
 
 type CreatePageMetadataOptions = {
   title: string;
@@ -117,9 +117,11 @@ export function createSiteMetadata(): Metadata {
     }),
     icons: {
       icon: [
+        { url: `/icons/icon-48.png?v=${ICON_ASSET_VERSION}`, sizes: "48x48", type: "image/png" },
         { url: `/icons/icon-192.png?v=${ICON_ASSET_VERSION}`, sizes: "192x192", type: "image/png" },
         { url: `/icons/icon-512.png?v=${ICON_ASSET_VERSION}`, sizes: "512x512", type: "image/png" },
       ],
+      shortcut: `/favicon.ico?v=${ICON_ASSET_VERSION}`,
       apple: `/apple-touch-icon.png?v=${ICON_ASSET_VERSION}`,
     },
     openGraph: {

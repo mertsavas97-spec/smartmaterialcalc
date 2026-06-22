@@ -9,6 +9,8 @@ const svg = readFileSync(svgPath);
 const outputs = [
   ["public/favicon-16.png", 16],
   ["public/favicon-32.png", 32],
+  ["public/favicon-48.png", 48],
+  ["public/icons/icon-48.png", 48],
   ["public/apple-touch-icon.png", 180],
   ["public/icons/icon-192.png", 192],
   ["public/icons/icon-512.png", 512],
@@ -24,7 +26,8 @@ async function main() {
   const ico = await import("to-ico");
   const favicon16 = readFileSync(join(root, "public/favicon-16.png"));
   const favicon32 = readFileSync(join(root, "public/favicon-32.png"));
-  const icoBuffer = await ico.default([favicon16, favicon32]);
+  const favicon48 = readFileSync(join(root, "public/favicon-48.png"));
+  const icoBuffer = await ico.default([favicon16, favicon32, favicon48]);
   writeFileSync(join(root, "public/favicon.ico"), icoBuffer);
   console.log("Wrote public/favicon.ico");
 
