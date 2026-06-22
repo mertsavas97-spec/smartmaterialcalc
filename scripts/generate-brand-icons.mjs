@@ -27,6 +27,17 @@ async function main() {
   const icoBuffer = await ico.default([favicon16, favicon32]);
   writeFileSync(join(root, "public/favicon.ico"), icoBuffer);
   console.log("Wrote public/favicon.ico");
+
+  const appIconOutputs = [
+    ["src/app/favicon.ico", icoBuffer],
+    ["src/app/icon.svg", readFileSync(join(root, "public/icon.svg"))],
+    ["src/app/apple-icon.png", readFileSync(join(root, "public/apple-touch-icon.png"))],
+  ];
+
+  for (const [relativePath, data] of appIconOutputs) {
+    writeFileSync(join(root, relativePath), data);
+    console.log(`Wrote ${relativePath}`);
+  }
 }
 
 main().catch((error) => {

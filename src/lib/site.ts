@@ -1,8 +1,28 @@
+const PRODUCTION_HOST = "www.smartmaterialcalc.app";
+const APEX_HOST = "smartmaterialcalc.app";
+const DEFAULT_SITE_URL = `https://${PRODUCTION_HOST}`;
+
+function normalizeSiteOrigin(input: string): string {
+  try {
+    const url = new URL(input);
+    if (url.hostname === APEX_HOST) {
+      url.hostname = PRODUCTION_HOST;
+    }
+    return url.origin;
+  } catch {
+    return DEFAULT_SITE_URL;
+  }
+}
+
+function resolveSiteUrl(): string {
+  return normalizeSiteOrigin(process.env.NEXT_PUBLIC_SITE_URL ?? DEFAULT_SITE_URL);
+}
+
 export const SITE = {
   name: "SmartMaterialCalc",
-  domain: "smartmaterialcalc.app",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://smartmaterialcalc.app",
-  email: "hello@smartmaterialcalc.app",
+  domain: PRODUCTION_HOST,
+  url: resolveSiteUrl(),
+  email: `hello@${APEX_HOST}`,
   editorialTeam: "SmartMaterialCalc Editorial Team",
   tagline: "Free home improvement calculators for homeowners, DIYers, and contractors.",
   defaultDescription:
@@ -11,7 +31,15 @@ export const SITE = {
 
 export function absoluteUrl(path: string): string {
   if (path.startsWith("http")) {
-    return path;
+    try {
+      const url = new URL(path);
+      if (url.hostname === APEX_HOST) {
+        url.hostname = PRODUCTION_HOST;
+      }
+      return url.toString();
+    } catch {
+      return path;
+    }
   }
   return `${SITE.url}${path.startsWith("/") ? path : `/${path}`}`;
 }

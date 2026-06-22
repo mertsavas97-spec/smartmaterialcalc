@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { absoluteUrl, SITE } from "./site";
 
+/** Bumped when favicon / PWA icon binaries change to bust browser caches. */
+export const ICON_ASSET_VERSION = "2";
+
 type CreatePageMetadataOptions = {
   title: string;
   description?: string;
@@ -110,12 +113,10 @@ export function createSiteMetadata(): Metadata {
     },
     icons: {
       icon: [
-        { url: "/favicon.ico", sizes: "any" },
-        { url: "/icon.svg", type: "image/svg+xml" },
-        { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-        { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+        { url: `/icons/icon-192.png?v=${ICON_ASSET_VERSION}`, sizes: "192x192", type: "image/png" },
+        { url: `/icons/icon-512.png?v=${ICON_ASSET_VERSION}`, sizes: "512x512", type: "image/png" },
       ],
-      apple: "/apple-touch-icon.png",
+      apple: `/apple-touch-icon.png?v=${ICON_ASSET_VERSION}`,
     },
     openGraph: {
       title: defaultTitle,
