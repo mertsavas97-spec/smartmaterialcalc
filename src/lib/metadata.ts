@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { shouldAllowSearchIndexingMetadata } from "./indexing";
 import { absoluteUrl, SITE } from "./site";
 
 /** Bumped when favicon / PWA icon binaries change to bust browser caches. */
@@ -108,9 +109,12 @@ export function createSiteMetadata(): Metadata {
       "flooring calculator",
       "DIY calculator",
     ],
-    alternates: {
-      canonical: SITE.url,
-    },
+    ...(!shouldAllowSearchIndexingMetadata() && {
+      robots: {
+        index: false,
+        follow: false,
+      },
+    }),
     icons: {
       icon: [
         { url: `/icons/icon-192.png?v=${ICON_ASSET_VERSION}`, sizes: "192x192", type: "image/png" },

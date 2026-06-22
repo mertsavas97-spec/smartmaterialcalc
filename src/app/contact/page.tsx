@@ -20,6 +20,16 @@ export default function ContactPage() {
       title="Contact"
       description="Questions, feedback, or calculator suggestions — we would like to hear from you."
     >
+      <ContentSection title="About SmartMaterialCalc">
+        <p>
+          SmartMaterialCalc provides free home improvement material calculators
+          for homeowners, DIYers, and contractors. We help you estimate paint,
+          concrete, tile, gravel, mulch, flooring, and other project materials
+          before you buy — so you can plan quantities with fewer surprises at
+          the store.
+        </p>
+      </ContentSection>
+
       <ContentSection title="Email us">
         <p>
           Reach us at{" "}
@@ -29,7 +39,28 @@ export default function ContactPage() {
           >
             {SITE.email}
           </a>
-          . We aim to respond within a few business days.
+          . We typically respond within two to three business days.
+        </p>
+      </ContentSection>
+
+      <ContentSection title="What we can help with">
+        <ul className="list-disc space-y-2 pl-5">
+          <li>
+            <strong>Calculator feedback</strong> — report confusing inputs,
+            missing options, or results that do not match your project.
+          </li>
+          <li>
+            <strong>Content corrections</strong> — flag errors in guides,
+            formulas, or material recommendations.
+          </li>
+          <li>
+            <strong>New calculator ideas</strong> — suggest tools you would use
+            for upcoming home improvement projects.
+          </li>
+        </ul>
+        <p className="mt-3">
+          For how our estimates are built, see our{" "}
+          <ContentLink href="/methodology">methodology page</ContentLink>.
         </p>
       </ContentSection>
 

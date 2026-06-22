@@ -2,6 +2,24 @@ import { absoluteUrl, SITE } from "./site";
 
 export type JsonLdValue = Record<string, unknown>;
 
+const ORGANIZATION_LOGO_URL = absoluteUrl("/icons/icon-512.png");
+
+function buildOrganizationLogo(): JsonLdValue {
+  return {
+    "@type": "ImageObject",
+    url: ORGANIZATION_LOGO_URL,
+  };
+}
+
+function buildPublisherOrganization(): JsonLdValue {
+  return {
+    "@type": "Organization",
+    name: SITE.name,
+    url: SITE.url,
+    logo: buildOrganizationLogo(),
+  };
+}
+
 export function buildOrganizationSchema(): JsonLdValue {
   return {
     "@context": "https://schema.org",
@@ -10,6 +28,7 @@ export function buildOrganizationSchema(): JsonLdValue {
     url: SITE.url,
     description: SITE.defaultDescription,
     email: SITE.email,
+    logo: buildOrganizationLogo(),
   };
 }
 
@@ -20,11 +39,7 @@ export function buildWebSiteSchema(): JsonLdValue {
     name: SITE.name,
     url: SITE.url,
     description: SITE.defaultDescription,
-    publisher: {
-      "@type": "Organization",
-      name: SITE.name,
-      url: SITE.url,
-    },
+    publisher: buildPublisherOrganization(),
   };
 }
 
@@ -126,11 +141,7 @@ export function buildArticleSchema({
       "@type": "Organization",
       name: SITE.editorialTeam,
     },
-    publisher: {
-      "@type": "Organization",
-      name: SITE.name,
-      url: SITE.url,
-    },
+    publisher: buildPublisherOrganization(),
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": absoluteUrl(path),

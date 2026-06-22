@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
@@ -13,12 +14,20 @@ type PageProps = {
   searchParams: Promise<{ category?: string; q?: string }>;
 };
 
-export const metadata = createPageMetadata({
-  title: "All Calculators",
-  description:
-    "Browse all free home improvement calculators — paint, concrete, flooring, outdoor, lumber, roofing and more.",
-  path: "/calculators",
-});
+export async function generateMetadata({
+  searchParams,
+}: PageProps): Promise<Metadata> {
+  const { q } = await searchParams;
+  const hasSearchQuery = Boolean(q?.trim());
+
+  return createPageMetadata({
+    title: "All Calculators",
+    description:
+      "Browse all free home improvement calculators — paint, concrete, flooring, outdoor, lumber, roofing and more.",
+    path: "/calculators",
+    noIndex: hasSearchQuery,
+  });
+}
 
 export default async function CalculatorsPage({ searchParams }: PageProps) {
   const { category, q } = await searchParams;
