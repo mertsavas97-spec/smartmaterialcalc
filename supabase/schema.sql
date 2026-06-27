@@ -41,9 +41,20 @@ insert into public.homepage_settings (id, settings)
 values (1, '{}'::jsonb)
 on conflict (id) do nothing;
 
+create table if not exists public.site_settings (
+  id integer primary key default 1 check (id = 1),
+  settings jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now()
+);
+
+insert into public.site_settings (id, settings)
+values (1, '{}'::jsonb)
+on conflict (id) do nothing;
+
 alter table public.guides enable row level security;
 alter table public.admin_users enable row level security;
 alter table public.homepage_settings enable row level security;
+alter table public.site_settings enable row level security;
 
 create policy "Public read published guides"
   on public.guides
@@ -76,6 +87,12 @@ create policy "Admins read admin_users"
   to authenticated
   using (id = auth.uid());
 
+create policy "Public read homepage_settings"
+  on public.homepage_settings
+  for select
+  to anon, authenticated
+  using (true);
+
 create policy "Admins read homepage_settings"
   on public.homepage_settings
   for select
@@ -90,6 +107,43 @@ create policy "Admins read homepage_settings"
 
 create policy "Admins update homepage_settings"
   on public.homepage_settings
+  for update
+  to authenticated
+  using (
+    exists (
+      select 1
+      from public.admin_users
+      where admin_users.id = auth.uid()
+    )
+  )
+  with check (
+    exists (
+      select 1
+      from public.admin_users
+      where admin_users.id = auth.uid()
+    )
+  );
+
+create policy "Public read site_settings"
+  on public.site_settings
+  for select
+  to anon, authenticated
+  using (true);
+
+create policy "Admins read site_settings"
+  on public.site_settings
+  for select
+  to authenticated
+  using (
+    exists (
+      select 1
+      from public.admin_users
+      where admin_users.id = auth.uid()
+    )
+  );
+
+create policy "Admins update site_settings"
+  on public.site_settings
   for update
   to authenticated
   using (

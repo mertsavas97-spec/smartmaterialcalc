@@ -13,6 +13,8 @@ type CreatePageMetadataOptions = {
   absoluteTitle?: boolean;
   omitCanonical?: boolean;
   openGraphType?: "website" | "article";
+  openGraphTitle?: string;
+  openGraphDescription?: string;
   publishedTime?: string;
   modifiedTime?: string;
   image?: {
@@ -38,6 +40,8 @@ export function createPageMetadata({
   absoluteTitle = false,
   omitCanonical = false,
   openGraphType = "website",
+  openGraphTitle,
+  openGraphDescription,
   publishedTime,
   modifiedTime,
   image,
@@ -52,7 +56,9 @@ export function createPageMetadata({
       }
     : DEFAULT_OG_IMAGE;
 
-  const openGraphTitle = absoluteTitle ? title : `${title} | ${SITE.name}`;
+  const resolvedOgTitle =
+    openGraphTitle ?? (absoluteTitle ? title : `${title} | ${SITE.name}`);
+  const resolvedOgDescription = openGraphDescription ?? description;
 
   return {
     title: absoluteTitle ? { absolute: title } : title,
@@ -64,8 +70,8 @@ export function createPageMetadata({
         },
       }),
     openGraph: {
-      title: openGraphTitle,
-      description,
+      title: resolvedOgTitle,
+      description: resolvedOgDescription,
       ...(pageUrl && !omitCanonical && { url: pageUrl }),
       siteName: SITE.name,
       type: openGraphType,
@@ -78,8 +84,8 @@ export function createPageMetadata({
     },
     twitter: {
       card: "summary_large_image",
-      title: openGraphTitle,
-      description,
+      title: resolvedOgTitle,
+      description: resolvedOgDescription,
       images: [ogImage.url],
     },
     ...(noIndex && {

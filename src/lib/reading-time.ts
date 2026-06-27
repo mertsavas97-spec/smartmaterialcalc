@@ -15,6 +15,10 @@ export function formatReadingTime(minutes: number): string {
 }
 
 function collectArticleText(article: GuideArticle): string {
+  if (article.bodyMarkdown?.trim()) {
+    return article.bodyMarkdown;
+  }
+
   const parts = [
     article.intro,
     article.whyItMatters.heading,

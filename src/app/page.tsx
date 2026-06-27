@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
@@ -9,44 +10,56 @@ import { CategoryCard } from "@/components/cards/CategoryCard";
 import { GuideCard } from "@/components/cards/GuideCard";
 import { FAQSection } from "@/components/content/FAQSection";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { categories } from "@/data/categories";
-import { homepageFaqs } from "@/data/homepage-faqs";
-import { popularCalculators } from "@/data/calculators";
+import { getHomepageSettings } from "@/lib/cms/loader";
+import {
+  resolveCategoryOrder,
+  resolveFeaturedCalculators,
+  resolveFeaturedGuides,
+  resolveHomepageStatistics,
+  resolveTrustHeadline,
+} from "@/lib/cms/resolve";
 import { createPageMetadata } from "@/lib/metadata";
-import { getPublishedGuides } from "@/lib/guides/loader";
 import { getCalculatorCount } from "@/lib/sitemap";
 import { buildFaqSchema } from "@/lib/structured-data";
 
-export const metadata = createPageMetadata({
-  title: "Free Home Improvement Calculators | Paint, Concrete, Tile & More",
-  description:
-    "Instant material calculators for homeowners, DIYers, and contractors. Estimate how much paint, concrete, gravel, tile, flooring, and other materials you need — free and no signup required.",
-  path: "/",
-  absoluteTitle: true,
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getHomepageSettings();
+
+  return createPageMetadata({
+    title: settings.seo.metaTitle,
+    description: settings.seo.metaDescription,
+    openGraphTitle: settings.seo.ogTitle,
+    openGraphDescription: settings.seo.ogDescription,
+    path: "/",
+    absoluteTitle: true,
+  });
+}
 
 export default async function HomePage() {
-  const guides = await getPublishedGuides();
-  const featuredGuides = guides.slice(0, 3);
+  const settings = await getHomepageSettings();
   const calculatorCount = getCalculatorCount();
+  const featuredCalculators = resolveFeaturedCalculators(settings.featuredCalculatorSlugs);
+  const featuredGuides = await resolveFeaturedGuides(settings.featuredGuideSlugs);
+  const orderedCategories = resolveCategoryOrder(settings.categoryOrder);
+  const statistics = resolveHomepageStatistics(settings, calculatorCount);
+  const trustHeadline = resolveTrustHeadline(settings, calculatorCount);
 
   return (
     <PageLayout>
-      <JsonLd data={buildFaqSchema(homepageFaqs)} />
+      <JsonLd data={buildFaqSchema(settings.faqs)} />
 
       {/* Hero */}
       <section className="bg-hero">
         <Container className="py-12 sm:py-16 lg:py-20">
           <div className="mx-auto max-w-3xl text-center">
             <span className="inline-block rounded-full bg-primary-light px-4 py-1.5 text-xs font-medium text-primary-dark">
-              Free · No signup required
+              {settings.hero.badge}
             </span>
             <h1 className="mt-5 text-3xl font-bold leading-tight tracking-tight text-text-primary sm:text-4xl lg:text-5xl">
-              Plan your project with material estimates.
+              {settings.hero.title}
             </h1>
             <p className="mt-4 text-base leading-relaxed text-text-secondary sm:text-lg">
-              Instant calculators for paint, concrete, tile, flooring, gravel
-              and more. Built for homeowners, DIYers, and contractors.
+              {settings.hero.subtitle}
             </p>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center">
@@ -56,16 +69,21 @@ export default async function HomePage() {
                 id="hero-search"
                 action="/calculators"
               />
-              <Button href="/calculators" variant="cta" size="lg" className="shrink-0">
-                Browse calculators
+              <Button
+                href={settings.hero.ctaUrl}
+                variant="cta"
+                size="lg"
+                className="shrink-0"
+              >
+                {settings.hero.ctaLabel}
               </Button>
             </div>
           </div>
 
           <div className="mx-auto mt-10 grid max-w-3xl grid-cols-1 gap-4 sm:grid-cols-3">
-            <StatCard value={`${calculatorCount}`} label="Free calculators" />
-            <StatCard value="100%" label="Free to use" />
-            <StatCard value="Instant" label="Planning estimates" />
+            {statistics.map((stat) => (
+              <StatCard key={`${stat.value}-${stat.label}`} value={stat.value} label={stat.label} />
+            ))}
           </div>
         </Container>
       </section>
@@ -87,7 +105,7 @@ export default async function HomePage() {
             </Button>
           </div>
           <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {popularCalculators.map((calc) => (
+            {featuredCalculators.map((calc) => (
               <CalculatorCard key={calc.slug} calculator={calc} />
             ))}
           </div>
@@ -111,7 +129,7 @@ export default async function HomePage() {
             </Button>
           </div>
           <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {categories.map((category) => (
+            {orderedCategories.map((category) => (
               <CategoryCard key={category.slug} category={category} />
             ))}
           </div>
@@ -146,7 +164,7 @@ export default async function HomePage() {
       <section className="py-12 sm:py-16">
         <Container>
           <FAQSection
-            faqs={homepageFaqs}
+            faqs={settings.faqs}
             title="Common questions"
             className="mt-0"
           />
@@ -159,17 +177,24 @@ export default async function HomePage() {
           <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:justify-between sm:text-left">
             <div>
               <p className="text-lg font-semibold text-primary-dark sm:text-xl">
-                {calculatorCount} free calculators. No signup. Planning estimates you can verify.
+                {trustHeadline}
               </p>
-              <Link
-                href="/methodology"
-                className="mt-2 inline-block text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              >
-                See how our calculations and assumptions work →
-              </Link>
+              {settings.trust.linkLabel && settings.trust.linkUrl ? (
+                <Link
+                  href={settings.trust.linkUrl}
+                  className="mt-2 inline-block text-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                >
+                  {settings.trust.linkLabel}
+                </Link>
+              ) : null}
             </div>
-            <Button href="/calculators" variant="primary" size="lg" className="shrink-0">
-              Explore calculators
+            <Button
+              href={settings.trust.ctaUrl}
+              variant="primary"
+              size="lg"
+              className="shrink-0"
+            >
+              {settings.trust.ctaLabel}
             </Button>
           </div>
         </Container>

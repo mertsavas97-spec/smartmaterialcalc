@@ -31,9 +31,27 @@ export default async function AdminLayout({
               {isSupabaseConfigured() ? "Supabase connected" : "Static fallback mode"}
             </p>
           </div>
-          <nav className="flex items-center gap-4 text-sm">
+          <nav className="flex flex-wrap items-center gap-4 text-sm">
+            <Link href="/admin" className="font-medium text-primary hover:underline">
+              Dashboard
+            </Link>
             <Link href="/admin/guides" className="font-medium text-primary hover:underline">
               Guides
+            </Link>
+            <Link href="/admin/homepage" className="font-medium text-primary hover:underline">
+              Homepage
+            </Link>
+            <Link href="/admin/seo" className="font-medium text-primary hover:underline">
+              SEO
+            </Link>
+            <Link
+              href="/admin/site-settings"
+              className="font-medium text-primary hover:underline"
+            >
+              Site
+            </Link>
+            <Link href="/admin/analytics" className="font-medium text-primary hover:underline">
+              Analytics
             </Link>
             <form action={signOutAction}>
               <button

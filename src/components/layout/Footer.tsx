@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/brand/BrandLogo";
 import { Container } from "./Container";
+import type { SocialLink } from "@/lib/cms/types";
 
 const footerLinks = {
   calculators: [
@@ -33,7 +34,15 @@ const footerLinks = {
   ],
 };
 
-export function Footer() {
+type FooterProps = {
+  copyrightText?: string;
+  socialLinks?: SocialLink[];
+};
+
+export function Footer({
+  copyrightText = "SmartMaterialCalc. All rights reserved.",
+  socialLinks = [],
+}: FooterProps) {
   return (
     <footer className="mt-auto bg-footer text-white">
       <Container className="py-12">
@@ -119,7 +128,24 @@ export function Footer() {
         </div>
 
         <div className="mt-10 border-t border-white/10 pt-6 text-center text-xs text-white/50">
-          <p>&copy; {new Date().getFullYear()} SmartMaterialCalc. All rights reserved.</p>
+          {socialLinks.length > 0 ? (
+            <div className="mb-3 flex flex-wrap items-center justify-center gap-4">
+              {socialLinks.map((link) => (
+                <a
+                  key={`${link.platform}-${link.url}`}
+                  href={link.url}
+                  className="text-white/70 transition-colors hover:text-white"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {link.platform}
+                </a>
+              ))}
+            </div>
+          ) : null}
+          <p>
+            &copy; {new Date().getFullYear()} {copyrightText}
+          </p>
         </div>
       </Container>
     </footer>

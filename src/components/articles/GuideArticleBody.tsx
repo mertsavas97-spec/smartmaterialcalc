@@ -8,6 +8,7 @@ import {
   ArticleParagraph,
   ArticleSection,
 } from "./GuideArticleSections";
+import { GuideMarkdownBody } from "./GuideMarkdownBody";
 import { buildArticleNavigation } from "@/lib/article-toc";
 import { renderInlineLinks } from "@/lib/render-inline-links";
 import type { GuideArticle } from "@/types/guide-article";
@@ -17,6 +18,10 @@ type GuideArticleBodyProps = {
 };
 
 export function GuideArticleBody({ article }: GuideArticleBodyProps) {
+  if (article.useMarkdownBody && article.bodyMarkdown?.trim()) {
+    return <GuideMarkdownBody article={article} />;
+  }
+
   const { sectionIds } = buildArticleNavigation(article);
 
   return (

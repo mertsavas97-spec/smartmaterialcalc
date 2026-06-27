@@ -51,7 +51,7 @@ export function guideRecordToGuide(row: GuideRecord): Guide {
     excerpt: row.excerpt,
     datePublished: row.date_published,
     dateModified: row.date_modified,
-    thumbnail: row.hero_image,
+    thumbnail: row.content.thumbnailImage ?? row.hero_image,
     heroImage: row.hero_image,
   };
 }

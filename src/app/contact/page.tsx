@@ -1,5 +1,5 @@
 import { createPageMetadata } from "@/lib/metadata";
-import { SITE } from "@/lib/site";
+import { getSiteSettings } from "@/lib/cms/loader";
 import {
   ContentLink,
   ContentPageShell,
@@ -14,7 +14,9 @@ export const metadata = createPageMetadata({
   path: "/contact",
 });
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const siteSettings = await getSiteSettings();
+
   return (
     <ContentPageShell
       title="Contact"
@@ -34,10 +36,10 @@ export default function ContactPage() {
         <p>
           Reach us at{" "}
           <a
-            href={`mailto:${SITE.email}`}
+            href={`mailto:${siteSettings.contactEmail}`}
             className="text-primary hover:underline"
           >
-            {SITE.email}
+            {siteSettings.contactEmail}
           </a>
           . We typically respond within two to three business days.
         </p>
@@ -68,7 +70,7 @@ export default function ContactPage() {
         <form
           className="rounded-[var(--radius-lg)] border border-card-border bg-white p-6 shadow-sm"
           aria-label="Contact form"
-          action={`mailto:${SITE.email}`}
+          action={`mailto:${siteSettings.contactEmail}`}
           method="post"
           encType="text/plain"
         >

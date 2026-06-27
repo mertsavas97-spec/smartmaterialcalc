@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { GuideEditorForm } from "@/components/admin/GuideEditorForm";
-import { getGuideRecordBySlugForAdmin } from "@/lib/guides/loader";
+import { GuideProEditor } from "@/components/admin/guide-editor/GuideProEditor";
+import { calculators } from "@/data/calculators";
+import { getAllGuidesForAdmin, getGuideRecordBySlugForAdmin } from "@/lib/guides/loader";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ saved?: string }>;
+  searchParams: Promise<{ saved?: string; error?: string }>;
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -19,8 +20,11 @@ export default async function AdminEditGuidePage({
   searchParams,
 }: PageProps) {
   const { slug } = await params;
-  const { saved } = await searchParams;
-  const guide = await getGuideRecordBySlugForAdmin(slug);
+  const { saved, error } = await searchParams;
+  const [guide, guides] = await Promise.all([
+    getGuideRecordBySlugForAdmin(slug),
+    getAllGuidesForAdmin(),
+  ]);
 
   if (!guide) {
     notFound();
@@ -32,11 +36,17 @@ export default async function AdminEditGuidePage({
         ← Back to guides
       </Link>
       <h1 className="mt-4 text-2xl font-bold">Edit guide</h1>
-      {saved === "1" && (
-        <p className="mt-2 text-sm text-primary-dark">Guide saved successfully.</p>
-      )}
       <div className="mt-6">
-        <GuideEditorForm guide={guide} />
+        <GuideProEditor
+          guide={guide}
+          guideOptions={guides.map((item) => ({ slug: item.slug, title: item.title }))}
+          calculatorOptions={calculators.map((item) => ({
+            slug: item.slug,
+            title: item.title,
+          }))}
+          saved={saved}
+          error={error}
+        />
       </div>
     </div>
   );

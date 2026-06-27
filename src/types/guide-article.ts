@@ -37,4 +37,7 @@ export type GuideArticle = {
     href: string;
     label: string;
   }[];
+  bodyMarkdown?: string;
+  useMarkdownBody?: boolean;
+  thumbnailImage?: string;
 };
