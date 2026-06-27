@@ -1,8 +1,8 @@
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Container } from "@/components/layout/Container";
 import { GuideCard } from "@/components/cards/GuideCard";
-import { guides } from "@/data/guides";
 import { createPageMetadata } from "@/lib/metadata";
+import { getPublishedGuides } from "@/lib/guides/loader";
 
 export const metadata = createPageMetadata({
   title: "Guides & Resources",
@@ -11,7 +11,9 @@ export const metadata = createPageMetadata({
   path: "/guides",
 });
 
-export default function GuidesPage() {
+export default async function GuidesPage() {
+  const guides = await getPublishedGuides();
+
   return (
     <PageLayout>
       <Container className="py-10 sm:py-14">

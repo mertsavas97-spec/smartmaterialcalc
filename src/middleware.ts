@@ -1,16 +1,8 @@
 import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
-import { shouldNoIndexRequest } from "@/lib/indexing";
+import { updateSession } from "@/lib/supabase/middleware";
 
-export function middleware(request: NextRequest) {
-  const host = request.headers.get("host") ?? "";
-  const response = NextResponse.next();
-
-  if (shouldNoIndexRequest(host)) {
-    response.headers.set("X-Robots-Tag", "noindex, nofollow");
-  }
-
-  return response;
+export async function middleware(request: NextRequest) {
+  return updateSession(request);
 }
 
 export const config = {

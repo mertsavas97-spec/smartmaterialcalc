@@ -19,7 +19,7 @@ import {
   getAllCategorySlugs,
   getCategoryBySlug,
 } from "@/data/categories";
-import { getGuideBySlug } from "@/data/guides";
+import { getPublishedGuideBySlug } from "@/lib/guides/loader";
 import { createPageMetadata } from "@/lib/metadata";
 import { formatMonthYear } from "@/lib/date-format";
 import {
@@ -63,9 +63,11 @@ export default async function CategoryHubPage({ params }: PageProps) {
     .map((calcSlug) => getCalculatorBySlug(calcSlug))
     .filter((calc): calc is NonNullable<typeof calc> => Boolean(calc));
 
-  const categoryGuides = category.guideSlugs
-    .map((guideSlug) => getGuideBySlug(guideSlug))
-    .filter((guide): guide is NonNullable<typeof guide> => Boolean(guide));
+  const categoryGuides = (
+    await Promise.all(
+      category.guideSlugs.map((guideSlug) => getPublishedGuideBySlug(guideSlug))
+    )
+  ).filter((guide): guide is NonNullable<typeof guide> => Boolean(guide));
 
   const structuredData = [
     buildBreadcrumbSchema([

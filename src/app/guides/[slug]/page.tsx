@@ -11,12 +11,12 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { Container } from "@/components/layout/Container";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getCalculatorBySlug } from "@/data/calculators";
-import { getGuideArticle } from "@/data/guide-articles";
+import { formatGuideDate } from "@/data/guides";
 import {
-  formatGuideDate,
-  getAllGuideSlugs,
-  getGuideBySlug,
-} from "@/data/guides";
+  getAllGuideSlugsForBuild,
+  getPublishedGuideArticle,
+  getPublishedGuideBySlug,
+} from "@/lib/guides/loader";
 import { buildArticleNavigation } from "@/lib/article-toc";
 import { createPageMetadata } from "@/lib/metadata";
 import { getArticleReadingTime } from "@/lib/reading-time";
@@ -35,13 +35,14 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-  return getAllGuideSlugs().map((slug) => ({ slug }));
+export async function generateStaticParams() {
+  const slugs = await getAllGuideSlugsForBuild();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const guide = getGuideBySlug(slug);
+  const guide = await getPublishedGuideBySlug(slug);
 
   if (!guide) {
     return { title: "Guide Not Found" };
@@ -65,16 +66,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function GuidePage({ params }: PageProps) {
   const { slug } = await params;
-  const guide = getGuideBySlug(slug);
-  const article = getGuideArticle(slug);
+  const guide = await getPublishedGuideBySlug(slug);
+  const article = await getPublishedGuideArticle(slug);
 
   if (!guide || !article) {
     notFound();
   }
 
   const readingTime = getArticleReadingTime(article);
-  const relatedGuides = getRelatedGuidesForGuide(slug);
-  const relatedCalculators = getRelatedCalculatorsForGuide(slug);
+  const relatedGuides = await getRelatedGuidesForGuide(slug);
+  const relatedCalculators = await getRelatedCalculatorsForGuide(slug);
   const { toc } = buildArticleNavigation(article);
   const calculator = getCalculatorBySlug(article.cta.calculatorSlug);
   const calculatorTitle = calculator?.title ?? "Calculator";

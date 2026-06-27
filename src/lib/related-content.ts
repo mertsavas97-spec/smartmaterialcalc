@@ -1,14 +1,21 @@
 import { calculators, getCalculatorBySlug } from "@/data/calculators";
-import { getGuideArticle } from "@/data/guide-articles";
-import { getGuideBySlug, guides } from "@/data/guides";
+import type { Guide } from "@/data/guides";
+import {
+  getPublishedGuideArticle,
+  getPublishedGuideBySlug,
+  getPublishedGuides,
+} from "@/lib/guides/loader";
 
-export function getRelatedGuides(slug: string, limit = 3) {
+export async function getRelatedGuides(slug: string, limit = 3) {
   const calculator = getCalculatorBySlug(slug);
   if (!calculator) return [];
 
-  const linked = calculator.relatedGuideSlugs
-    .map((guideSlug) => getGuideBySlug(guideSlug))
-    .filter((guide): guide is NonNullable<typeof guide> => Boolean(guide));
+  const guides = await getPublishedGuides();
+  const linked = (
+    await Promise.all(
+      calculator.relatedGuideSlugs.map((guideSlug) => getPublishedGuideBySlug(guideSlug))
+    )
+  ).filter((guide): guide is Guide => Boolean(guide));
 
   if (linked.length >= limit) {
     return linked.slice(0, limit);
@@ -23,14 +30,14 @@ export function getRelatedGuides(slug: string, limit = 3) {
   return [...linked, ...sameCategory].slice(0, limit);
 }
 
-export function getRelatedCalculators(slug: string, limit = 3) {
+export async function getRelatedCalculators(slug: string, limit = 3) {
   const calculator = getCalculatorBySlug(slug);
   if (!calculator) return [];
 
   const fromGuides: NonNullable<ReturnType<typeof getCalculatorBySlug>>[] = [];
 
   for (const guideSlug of calculator.relatedGuideSlugs) {
-    const article = getGuideArticle(guideSlug);
+    const article = await getPublishedGuideArticle(guideSlug);
     if (!article) continue;
 
     const primarySlug = article.calculatorSlug ?? article.cta.calculatorSlug;
@@ -74,16 +81,17 @@ export function getRelatedCalculators(slug: string, limit = 3) {
   return [...combined, ...others].slice(0, limit);
 }
 
-export function getRelatedGuidesForGuide(slug: string, limit = 3) {
-  const guide = getGuideBySlug(slug);
+export async function getRelatedGuidesForGuide(slug: string, limit = 3) {
+  const guide = await getPublishedGuideBySlug(slug);
   if (!guide) return [];
 
-  const article = getGuideArticle(slug);
+  const article = await getPublishedGuideArticle(slug);
   const linkedSlugs = article?.relatedGuideSlugs ?? [];
+  const guides = await getPublishedGuides();
 
-  const linked = linkedSlugs
-    .map((guideSlug) => getGuideBySlug(guideSlug))
-    .filter((item): item is NonNullable<typeof item> => Boolean(item));
+  const linked = (
+    await Promise.all(linkedSlugs.map((guideSlug) => getPublishedGuideBySlug(guideSlug)))
+  ).filter((item): item is Guide => Boolean(item));
 
   if (linked.length >= limit) {
     return linked.slice(0, limit);
@@ -99,9 +107,9 @@ export function getRelatedGuidesForGuide(slug: string, limit = 3) {
   return [...linked, ...sameCategory].slice(0, limit);
 }
 
-export function getRelatedCalculatorsForGuide(slug: string, limit = 3) {
-  const article = getGuideArticle(slug);
-  const guide = getGuideBySlug(slug);
+export async function getRelatedCalculatorsForGuide(slug: string, limit = 3) {
+  const article = await getPublishedGuideArticle(slug);
+  const guide = await getPublishedGuideBySlug(slug);
   if (!guide) return [];
 
   const primarySlug = article?.calculatorSlug ?? article?.cta.calculatorSlug;

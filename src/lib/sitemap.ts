@@ -1,7 +1,7 @@
 import { SITE } from "./site";
 import { calculators, getAllCalculatorSlugs } from "@/data/calculators";
 import { getAllCategorySlugs, getCategoryBySlug } from "@/data/categories";
-import { guides } from "@/data/guides";
+import { getPublishedGuides } from "@/lib/guides/loader";
 import { isoDateToLastModified } from "./date-format";
 
 export type SitemapEntry = {
@@ -37,7 +37,9 @@ const STATIC_ROUTES: SitemapEntry[] = [
   { url: "/affiliate-disclosure", changeFrequency: "yearly", priority: 0.3 },
 ];
 
-export function getSitemapEntries(): SitemapEntry[] {
+export async function getSitemapEntries(): Promise<SitemapEntry[]> {
+  const guides = await getPublishedGuides();
+
   const calculatorRoutes: SitemapEntry[] = getAllCalculatorSlugs().map((slug) => {
     const calculator = calculators.find((entry) => entry.slug === slug);
     return {
@@ -79,8 +81,9 @@ export function getSitemapEntries(): SitemapEntry[] {
   return [...staticRoutes, ...calculatorRoutes, ...guideRoutes, ...categoryHubRoutes];
 }
 
-export function getAbsoluteSitemapUrls(): string[] {
-  return getSitemapEntries().map((entry) => `${SITE.url}${entry.url}`);
+export async function getAbsoluteSitemapUrls(): Promise<string[]> {
+  const entries = await getSitemapEntries();
+  return entries.map((entry) => `${SITE.url}${entry.url}`);
 }
 
 export function getCalculatorCount(): number {

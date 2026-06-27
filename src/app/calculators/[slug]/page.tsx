@@ -61,8 +61,8 @@ export default async function CalculatorPage({ params }: PageProps) {
   const explanation = calculatorExplanations[slug];
   const faqs = getCalculatorFaqs(slug);
   const materials = getCalculatorMaterials(slug);
-  const relatedGuides = getRelatedGuides(slug);
-  const relatedCalculators = getRelatedCalculators(slug);
+  const relatedGuides = await getRelatedGuides(slug);
+  const relatedCalculators = await getRelatedCalculators(slug);
 
   const categorySlug = getCategorySlugByName(calculator.category);
   const categoryPath = categorySlug

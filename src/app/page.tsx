@@ -12,8 +12,8 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { categories } from "@/data/categories";
 import { homepageFaqs } from "@/data/homepage-faqs";
 import { popularCalculators } from "@/data/calculators";
-import { guides } from "@/data/guides";
 import { createPageMetadata } from "@/lib/metadata";
+import { getPublishedGuides } from "@/lib/guides/loader";
 import { getCalculatorCount } from "@/lib/sitemap";
 import { buildFaqSchema } from "@/lib/structured-data";
 
@@ -25,7 +25,8 @@ export const metadata = createPageMetadata({
   absoluteTitle: true,
 });
 
-export default function HomePage() {
+export default async function HomePage() {
+  const guides = await getPublishedGuides();
   const featuredGuides = guides.slice(0, 3);
   const calculatorCount = getCalculatorCount();
 
