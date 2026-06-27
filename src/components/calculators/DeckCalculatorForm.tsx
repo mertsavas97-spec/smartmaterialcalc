@@ -10,6 +10,7 @@ import {
   CALCULATOR_INPUT_CLASSNAME,
   parseNumber,
 } from "@/lib/calculator-utils";
+import { trackCalculatorSubmit } from "@/lib/analytics";
 import { validateDeckInputs } from "@/lib/calculator-form-utils";
 import {
   calculateDeck,
@@ -37,6 +38,7 @@ export function DeckCalculatorForm() {
     setValidationError(null);
     setResults(calculateDeck(inputs));
     setHasCalculated(true);
+    trackCalculatorSubmit("deck-calculator");
   }
 
   function handleReset() {
@@ -143,7 +145,7 @@ export function DeckCalculatorForm() {
             />
           </div>
           <CalculatorValidationAlert message={validationError} />
-          <CalculatorFormActions onReset={handleReset} calculatorSlug="deck-calculator" />
+          <CalculatorFormActions onReset={handleReset} />
         </form>
       </div>
 

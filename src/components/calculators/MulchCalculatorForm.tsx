@@ -10,6 +10,7 @@ import {
   CALCULATOR_INPUT_CLASSNAME,
   parseNumber,
 } from "@/lib/calculator-utils";
+import { trackCalculatorSubmit } from "@/lib/analytics";
 import { validateMulchInputs } from "@/lib/calculator-form-utils";
 import {
   calculateMulch,
@@ -39,6 +40,7 @@ export function MulchCalculatorForm() {
     setValidationError(null);
     setResults(calculateMulch(inputs));
     setHasCalculated(true);
+    trackCalculatorSubmit("mulch-calculator");
   }
 
   function handleReset() {
@@ -145,7 +147,7 @@ export function MulchCalculatorForm() {
             />
           </div>
           <CalculatorValidationAlert message={validationError} />
-          <CalculatorFormActions onReset={handleReset} calculatorSlug="mulch-calculator" />
+          <CalculatorFormActions onReset={handleReset} />
         </form>
       </div>
 

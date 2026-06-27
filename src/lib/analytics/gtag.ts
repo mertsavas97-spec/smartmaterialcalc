@@ -66,7 +66,11 @@ export function sendAnalyticsEvent(
   eventName: string,
   params: Record<string, string | number | boolean> = {}
 ): void {
-  if (!shouldEnableClientAnalytics()) {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  if (!shouldEnableClientAnalytics(window.location.pathname)) {
     return;
   }
 

@@ -10,6 +10,7 @@ import {
   CALCULATOR_INPUT_CLASSNAME,
   parseNumber,
 } from "@/lib/calculator-utils";
+import { trackCalculatorSubmit } from "@/lib/analytics";
 import { validateRoofingInputs } from "@/lib/calculator-form-utils";
 import {
   calculateRoofing,
@@ -39,6 +40,7 @@ export function RoofingCalculatorForm() {
     setValidationError(null);
     setResults(calculateRoofing(inputs));
     setHasCalculated(true);
+    trackCalculatorSubmit("roofing-calculator");
   }
 
   function handleReset() {
@@ -130,7 +132,7 @@ export function RoofingCalculatorForm() {
             />
           </div>
           <CalculatorValidationAlert message={validationError} />
-          <CalculatorFormActions onReset={handleReset} calculatorSlug="roofing-calculator" />
+          <CalculatorFormActions onReset={handleReset} />
         </form>
       </div>
 

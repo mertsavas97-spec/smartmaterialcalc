@@ -1,23 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/Button";
-import { trackCalculatorSubmit } from "@/lib/analytics";
 
 type CalculatorFormActionsProps = {
   onReset: () => void;
-  calculatorSlug?: string;
 };
 
-export function CalculatorFormActions({
-  onReset,
-  calculatorSlug,
-}: CalculatorFormActionsProps) {
-  function handleSubmitClick() {
-    if (calculatorSlug) {
-      trackCalculatorSubmit(calculatorSlug);
-    }
-  }
-
+export function CalculatorFormActions({ onReset }: CalculatorFormActionsProps) {
   return (
     <div className="flex items-center gap-4 pt-2">
       <Button
@@ -25,7 +14,6 @@ export function CalculatorFormActions({
         size="lg"
         type="submit"
         className="flex-1 sm:flex-none"
-        onClick={handleSubmitClick}
       >
         Calculate
       </Button>

@@ -10,6 +10,7 @@ import {
   CALCULATOR_INPUT_CLASSNAME,
   parseNumber,
 } from "@/lib/calculator-utils";
+import { trackCalculatorSubmit } from "@/lib/analytics";
 import { validateGravelInputs } from "@/lib/calculator-form-utils";
 import {
   calculateGravel,
@@ -39,6 +40,7 @@ export function GravelCalculatorForm() {
     setValidationError(null);
     setResults(calculateGravel(inputs));
     setHasCalculated(true);
+    trackCalculatorSubmit("gravel-calculator");
   }
 
   function handleReset() {
@@ -145,7 +147,7 @@ export function GravelCalculatorForm() {
             />
           </div>
           <CalculatorValidationAlert message={validationError} />
-          <CalculatorFormActions onReset={handleReset} calculatorSlug="gravel-calculator" />
+          <CalculatorFormActions onReset={handleReset} />
         </form>
       </div>
 

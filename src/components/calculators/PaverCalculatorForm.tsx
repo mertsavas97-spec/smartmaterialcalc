@@ -10,6 +10,7 @@ import {
   CALCULATOR_INPUT_CLASSNAME,
   parseNumber,
 } from "@/lib/calculator-utils";
+import { trackCalculatorSubmit } from "@/lib/analytics";
 import { validatePaverInputs } from "@/lib/calculator-form-utils";
 import {
   calculatePaver,
@@ -39,6 +40,7 @@ export function PaverCalculatorForm() {
     setValidationError(null);
     setResults(calculatePaver(inputs));
     setHasCalculated(true);
+    trackCalculatorSubmit("paver-calculator");
   }
 
   function handleReset() {
@@ -145,7 +147,7 @@ export function PaverCalculatorForm() {
             />
           </div>
           <CalculatorValidationAlert message={validationError} />
-          <CalculatorFormActions onReset={handleReset} calculatorSlug="paver-calculator" />
+          <CalculatorFormActions onReset={handleReset} />
         </form>
       </div>
 

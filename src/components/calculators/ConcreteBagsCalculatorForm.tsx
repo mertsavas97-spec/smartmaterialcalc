@@ -10,6 +10,7 @@ import {
   CALCULATOR_INPUT_CLASSNAME,
   parseNumber,
 } from "@/lib/calculator-utils";
+import { trackCalculatorSubmit } from "@/lib/analytics";
 import { validateConcreteBagsInputs } from "@/lib/calculator-form-utils";
 import {
   calculateConcreteBags,
@@ -39,6 +40,7 @@ export function ConcreteBagsCalculatorForm() {
     setValidationError(null);
     setResults(calculateConcreteBags(inputs));
     setHasCalculated(true);
+    trackCalculatorSubmit("concrete-bags-calculator");
   }
 
   function handleReset() {
@@ -145,7 +147,7 @@ export function ConcreteBagsCalculatorForm() {
             />
           </div>
           <CalculatorValidationAlert message={validationError} />
-          <CalculatorFormActions onReset={handleReset} calculatorSlug="concrete-bags-calculator" />
+          <CalculatorFormActions onReset={handleReset} />
         </form>
       </div>
 

@@ -10,6 +10,7 @@ import {
   CALCULATOR_INPUT_CLASSNAME,
   parseNumber,
 } from "@/lib/calculator-utils";
+import { trackCalculatorSubmit } from "@/lib/analytics";
 import { validateDrywallInputs } from "@/lib/calculator-form-utils";
 import {
   calculateDrywall,
@@ -39,6 +40,7 @@ export function DrywallCalculatorForm() {
     setValidationError(null);
     setResults(calculateDrywall(inputs));
     setHasCalculated(true);
+    trackCalculatorSubmit("drywall-calculator");
   }
 
   function handleReset() {
@@ -160,7 +162,7 @@ export function DrywallCalculatorForm() {
             />
           </div>
           <CalculatorValidationAlert message={validationError} />
-          <CalculatorFormActions onReset={handleReset} calculatorSlug="drywall-calculator" />
+          <CalculatorFormActions onReset={handleReset} />
         </form>
       </div>
 

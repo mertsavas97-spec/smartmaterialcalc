@@ -10,6 +10,7 @@ import {
   CALCULATOR_INPUT_CLASSNAME,
   parseNumber,
 } from "@/lib/calculator-utils";
+import { trackCalculatorSubmit } from "@/lib/analytics";
 import { validateWallpaperInputs } from "@/lib/calculator-form-utils";
 import {
   calculateWallpaper,
@@ -39,6 +40,7 @@ export function WallpaperCalculatorForm() {
     setValidationError(null);
     setResults(calculateWallpaper(inputs));
     setHasCalculated(true);
+    trackCalculatorSubmit("wallpaper-calculator");
   }
 
   function handleReset() {
@@ -145,7 +147,7 @@ export function WallpaperCalculatorForm() {
             />
           </div>
           <CalculatorValidationAlert message={validationError} />
-          <CalculatorFormActions onReset={handleReset} calculatorSlug="wallpaper-calculator" />
+          <CalculatorFormActions onReset={handleReset} />
         </form>
       </div>
 

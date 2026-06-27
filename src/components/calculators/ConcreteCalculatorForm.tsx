@@ -10,6 +10,7 @@ import {
   CALCULATOR_INPUT_CLASSNAME,
   parseNumber,
 } from "@/lib/calculator-utils";
+import { trackCalculatorSubmit } from "@/lib/analytics";
 import { validateConcreteInputs } from "@/lib/calculator-form-utils";
 import {
   calculateConcrete,
@@ -39,6 +40,7 @@ export function ConcreteCalculatorForm() {
     setValidationError(null);
     setResults(calculateConcrete(inputs));
     setHasCalculated(true);
+    trackCalculatorSubmit("concrete-calculator");
   }
 
   function handleReset() {
@@ -128,7 +130,7 @@ export function ConcreteCalculatorForm() {
             />
           </div>
           <CalculatorValidationAlert message={validationError} />
-          <CalculatorFormActions onReset={handleReset} calculatorSlug="concrete-calculator" />
+          <CalculatorFormActions onReset={handleReset} />
         </form>
       </div>
 

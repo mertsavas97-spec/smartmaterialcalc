@@ -10,6 +10,7 @@ import {
   CALCULATOR_INPUT_CLASSNAME,
   parseNumber,
 } from "@/lib/calculator-utils";
+import { trackCalculatorSubmit } from "@/lib/analytics";
 import { validateFenceInputs } from "@/lib/calculator-form-utils";
 import {
   calculateFence,
@@ -39,6 +40,7 @@ export function FenceCalculatorForm() {
     setValidationError(null);
     setResults(calculateFence(inputs));
     setHasCalculated(true);
+    trackCalculatorSubmit("fence-calculator");
   }
 
   function handleReset() {
@@ -145,7 +147,7 @@ export function FenceCalculatorForm() {
             </div>
           </div>
           <CalculatorValidationAlert message={validationError} />
-          <CalculatorFormActions onReset={handleReset} calculatorSlug="fence-calculator" />
+          <CalculatorFormActions onReset={handleReset} />
         </form>
       </div>
 

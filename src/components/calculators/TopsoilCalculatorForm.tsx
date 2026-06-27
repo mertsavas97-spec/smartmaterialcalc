@@ -10,6 +10,7 @@ import {
   CALCULATOR_INPUT_CLASSNAME,
   parseNumber,
 } from "@/lib/calculator-utils";
+import { trackCalculatorSubmit } from "@/lib/analytics";
 import { validateTopsoilInputs } from "@/lib/calculator-form-utils";
 import {
   calculateTopsoil,
@@ -39,6 +40,7 @@ export function TopsoilCalculatorForm() {
     setValidationError(null);
     setResults(calculateTopsoil(inputs));
     setHasCalculated(true);
+    trackCalculatorSubmit("topsoil-calculator");
   }
 
   function handleReset() {
@@ -130,7 +132,7 @@ export function TopsoilCalculatorForm() {
             />
           </div>
           <CalculatorValidationAlert message={validationError} />
-          <CalculatorFormActions onReset={handleReset} calculatorSlug="topsoil-calculator" />
+          <CalculatorFormActions onReset={handleReset} />
         </form>
       </div>
 

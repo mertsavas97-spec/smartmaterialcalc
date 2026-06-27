@@ -10,6 +10,7 @@ import {
   CALCULATOR_INPUT_CLASSNAME,
   parseNumber,
 } from "@/lib/calculator-utils";
+import { trackCalculatorSubmit } from "@/lib/analytics";
 import { validateTileInputs } from "@/lib/calculator-form-utils";
 import {
   calculateTile,
@@ -39,6 +40,7 @@ export function TileCalculatorForm() {
     setValidationError(null);
     setResults(calculateTile(inputs));
     setHasCalculated(true);
+    trackCalculatorSubmit("tile-calculator");
   }
 
   function handleReset() {
@@ -145,7 +147,7 @@ export function TileCalculatorForm() {
             />
           </div>
           <CalculatorValidationAlert message={validationError} />
-          <CalculatorFormActions onReset={handleReset} calculatorSlug="tile-calculator" />
+          <CalculatorFormActions onReset={handleReset} />
         </form>
       </div>
 

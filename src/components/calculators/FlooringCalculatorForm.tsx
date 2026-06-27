@@ -10,6 +10,7 @@ import {
   CALCULATOR_INPUT_CLASSNAME,
   parseNumber,
 } from "@/lib/calculator-utils";
+import { trackCalculatorSubmit } from "@/lib/analytics";
 import { validateFlooringInputs } from "@/lib/calculator-form-utils";
 import {
   calculateFlooring,
@@ -39,6 +40,7 @@ export function FlooringCalculatorForm() {
     setValidationError(null);
     setResults(calculateFlooring(inputs));
     setHasCalculated(true);
+    trackCalculatorSubmit("flooring-calculator");
   }
 
   function handleReset() {
@@ -130,7 +132,7 @@ export function FlooringCalculatorForm() {
             />
           </div>
           <CalculatorValidationAlert message={validationError} />
-          <CalculatorFormActions onReset={handleReset} calculatorSlug="flooring-calculator" />
+          <CalculatorFormActions onReset={handleReset} />
         </form>
       </div>
 

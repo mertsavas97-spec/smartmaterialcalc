@@ -10,6 +10,7 @@ import {
   CALCULATOR_INPUT_CLASSNAME,
   parseNumber,
 } from "@/lib/calculator-utils";
+import { trackCalculatorSubmit } from "@/lib/analytics";
 import { validateStairInputs } from "@/lib/calculator-form-utils";
 import {
   calculateStair,
@@ -39,6 +40,7 @@ export function StairCalculatorForm() {
     setValidationError(null);
     setResults(calculateStair(inputs));
     setHasCalculated(true);
+    trackCalculatorSubmit("stair-calculator");
   }
 
   function handleReset() {
@@ -115,7 +117,7 @@ export function StairCalculatorForm() {
             />
           </div>
           <CalculatorValidationAlert message={validationError} />
-          <CalculatorFormActions onReset={handleReset} calculatorSlug="stair-calculator" />
+          <CalculatorFormActions onReset={handleReset} />
         </form>
       </div>
 
