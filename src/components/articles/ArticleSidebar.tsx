@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { GuideCalculatorCtaLink } from "@/components/articles/GuideCalculatorCtaLink";
 import type { Guide } from "@/data/guides";
 import type { TocItem } from "@/lib/article-toc";
 
 type ArticleSidebarProps = {
   toc: TocItem[];
+  guideSlug: string;
   calculatorSlug: string;
   calculatorTitle: string;
   calculatorDescription: string;
@@ -30,6 +32,7 @@ function SidebarCard({
 
 export function ArticleSidebar({
   toc,
+  guideSlug,
   calculatorSlug,
   calculatorTitle,
   calculatorDescription,
@@ -66,13 +69,15 @@ export function ArticleSidebar({
           <p className="mt-1.5 line-clamp-3 text-sm leading-snug text-text-secondary">
             {calculatorDescription}
           </p>
-          <Link
-            href={`/calculators/${calculatorSlug}`}
+          <GuideCalculatorCtaLink
+            guideSlug={guideSlug}
+            calculatorSlug={calculatorSlug}
+            location="sidebar"
             className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
           >
             Open {calculatorTitle}
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-          </Link>
+          </GuideCalculatorCtaLink>
         </SidebarCard>
 
         {sidebarGuides.length > 0 && (

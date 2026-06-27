@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronRight, Clock } from "lucide-react";
 import type { Metadata } from "next";
+import { GuideViewTracker } from "@/components/analytics/GuideViewTracker";
 import { ArticleSidebar } from "@/components/articles/ArticleSidebar";
 import { GuideArticleBody } from "@/components/articles/GuideArticleBody";
 import { RelatedCalculators } from "@/components/content/RelatedCalculators";
@@ -105,6 +106,7 @@ export default async function GuidePage({ params }: PageProps) {
 
   return (
     <PageLayout>
+      <GuideViewTracker guideSlug={slug} />
       <JsonLd data={structuredData} />
       <Container className="max-w-[1180px] py-8 sm:py-10">
         <nav aria-label="Breadcrumb" className="text-sm text-text-muted">
@@ -181,6 +183,7 @@ export default async function GuidePage({ params }: PageProps) {
 
           <ArticleSidebar
             toc={toc}
+            guideSlug={slug}
             calculatorSlug={article.cta.calculatorSlug}
             calculatorTitle={calculatorTitle}
             calculatorDescription={calculatorDescription}

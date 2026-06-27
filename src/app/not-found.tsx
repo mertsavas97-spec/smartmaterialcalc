@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { NotFoundTracker } from "@/components/analytics/NotFoundTracker";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/Button";
@@ -15,6 +16,7 @@ export const metadata: Metadata = createPageMetadata({
 export default function NotFound() {
   return (
     <PageLayout>
+      <NotFoundTracker />
       <Container className="flex flex-col items-center py-20 text-center sm:py-32">
         <p className="text-6xl font-bold text-primary">404</p>
         <h1 className="mt-4 text-2xl font-bold text-text-primary sm:text-3xl">

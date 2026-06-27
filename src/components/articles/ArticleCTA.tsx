@@ -1,7 +1,4 @@
-"use client";
-
-import Link from "next/link";
-import { trackGuideCTA } from "@/lib/analytics";
+import { GuideCalculatorCtaLink } from "./GuideCalculatorCtaLink";
 
 type ArticleCTAProps = {
   title: string;
@@ -24,13 +21,14 @@ export function ArticleCTA({
       <p className="mt-2 text-sm leading-relaxed text-text-secondary">
         {description}
       </p>
-      <Link
-        href={`/calculators/${calculatorSlug}`}
-        onClick={() => trackGuideCTA(guideSlug, calculatorSlug)}
+      <GuideCalculatorCtaLink
+        guideSlug={guideSlug}
+        calculatorSlug={calculatorSlug}
+        location="article"
         className="mt-4 inline-flex items-center justify-center rounded-[var(--radius-sm)] bg-cta px-6 py-3 text-base font-medium text-white transition-colors hover:bg-[#E65100] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2"
       >
         {buttonText}
-      </Link>
+      </GuideCalculatorCtaLink>
     </div>
   );
 }

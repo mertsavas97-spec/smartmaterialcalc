@@ -124,6 +124,7 @@ export default async function AdminGuidePreviewPage({ params }: PageProps) {
 
           <ArticleSidebar
             toc={toc}
+            guideSlug={slug}
             calculatorSlug={article.cta.calculatorSlug}
             calculatorTitle={calculator?.title ?? "Calculator"}
             calculatorDescription={
