@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { shouldAllowSearchIndexingMetadata } from "./indexing";
+import { ADSENSE_CLIENT_ID } from "@/lib/adsense/env";
+import { isProductionDeployment, shouldAllowSearchIndexingMetadata } from "./indexing";
 import { absoluteUrl, SITE } from "./site";
 
 /** Bumped when favicon / PWA icon binaries change to bust browser caches. */
@@ -145,5 +146,10 @@ export function createSiteMetadata(): Metadata {
       description: SITE.defaultDescription,
       images: [DEFAULT_OG_IMAGE.url],
     },
+    ...(isProductionDeployment() && {
+      other: {
+        "google-adsense-account": ADSENSE_CLIENT_ID,
+      },
+    }),
   };
 }

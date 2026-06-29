@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AdSenseScript } from "@/components/adsense/AdSenseScript";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { createSiteMetadata } from "@/lib/metadata";
@@ -20,6 +21,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-sans">
         <JsonLd data={[buildOrganizationSchema(), buildWebSiteSchema()]} />
         <GoogleAnalytics />
+        <AdSenseScript />
         {children}
       </body>
     </html>
