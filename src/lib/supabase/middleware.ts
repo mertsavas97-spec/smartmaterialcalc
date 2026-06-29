@@ -1,7 +1,14 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { DOCUMENT_CACHE_HEADERS } from "@/lib/document-cache";
 import { shouldNoIndexRequest } from "@/lib/indexing";
 import { getSupabaseAnonKey, getSupabaseUrl, isSupabaseConfigured } from "./env";
+
+function applyDocumentCacheHeaders(response: NextResponse) {
+  for (const [key, value] of Object.entries(DOCUMENT_CACHE_HEADERS)) {
+    response.headers.set(key, value);
+  }
+}
 
 function applyNoIndexHeaders(request: NextRequest, response: NextResponse) {
   const host = request.headers.get("host") ?? "";
@@ -11,12 +18,17 @@ function applyNoIndexHeaders(request: NextRequest, response: NextResponse) {
   }
 }
 
+function applyResponseHeaders(request: NextRequest, response: NextResponse) {
+  applyDocumentCacheHeaders(response);
+  applyNoIndexHeaders(request, response);
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
   });
 
-  applyNoIndexHeaders(request, supabaseResponse);
+  applyResponseHeaders(request, supabaseResponse);
 
   if (!isSupabaseConfigured()) {
     return supabaseResponse;
@@ -34,7 +46,7 @@ export async function updateSession(request: NextRequest) {
         supabaseResponse = NextResponse.next({
           request,
         });
-        applyNoIndexHeaders(request, supabaseResponse);
+        applyResponseHeaders(request, supabaseResponse);
         cookiesToSet.forEach(({ name, value, options }) => {
           supabaseResponse.cookies.set(name, value, options);
         });

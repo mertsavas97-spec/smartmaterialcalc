@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { AdSenseScript } from "@/components/adsense/AdSenseScript";
-import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import { RootClientScripts } from "@/components/layout/RootClientScripts";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { createSiteMetadata } from "@/lib/metadata";
 import {
@@ -20,8 +19,7 @@ export default function RootLayout({
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col font-sans">
         <JsonLd data={[buildOrganizationSchema(), buildWebSiteSchema()]} />
-        <GoogleAnalytics />
-        <AdSenseScript />
+        <RootClientScripts />
         {children}
       </body>
     </html>

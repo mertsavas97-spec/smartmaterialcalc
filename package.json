@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "tsx --tsconfig tsconfig.json scripts/verify-asset-integrity.ts",
     "start": "next start",
     "lint": "eslint",
     "migrate:guides": "tsx --tsconfig tsconfig.json scripts/migrate-guides-to-supabase.ts",
