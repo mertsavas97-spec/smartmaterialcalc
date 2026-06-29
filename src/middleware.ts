@@ -5,8 +5,14 @@ export async function middleware(request: NextRequest) {
   return updateSession(request);
 }
 
+/**
+ * Bypass middleware for crawler/static files:
+ * ads.txt, robots.txt, security.txt, humans.txt (.txt),
+ * sitemap.xml, favicon.ico, manifest.webmanifest,
+ * images, and Next.js static assets.
+ */
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|webmanifest)$).*)",
+    "/((?!_next/static|_next/image|favicon\\.ico|manifest\\.webmanifest|sitemap\\.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|webmanifest|txt)$).*)",
   ],
 };
